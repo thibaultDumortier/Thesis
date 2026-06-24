@@ -1,0 +1,188 @@
+\chapter{Données}
+
+Dans le cadre de ce mémoire, les données textuelles exploitées reposent sur trois ressources principales{ :}
+le projet ParCoLab, l’Atlas sonore des langues régionales du LIMSI, et une traduction de la parabole du
+fils prodigue. Ces corpus ont été choisis pour leur richesse linguistique, correspondant aux attentes de
+notre projet. En effet, ces 3 projets s'intéressent aux langues régionales de France particulièrement l'alsacien,
+le corse et l'occitan.
+
+Le corpus ParCoLab (ParCoLab – Multilingual Parallel Corpus) \citep{stosic_2024} constitue la base la plus
+volumineuse. ParCoLab est un projet parallèle multilingue porté par le laboratoire CLLE
+(Université de Toulouse) et soutenu par la Délégation générale à la langue
+française et aux langues de France (DGLFLF). Celui-ci vise à
+constituer et diffuser un corpus de textes alignés dans différentes
+langues, dont des langues régionales de France centrales du projet.
+Ces textes sont alignés au niveau des phrases, ce qui permet d’effectuer des analyses comparatives fines.
+
+L’Atlas sonore des langues régionales du LIMSI (Laboratoire LIMSI, CNRS) \citep{boulademareuil_2017} est
+une ressource patrimoniale remarquable. Ce projet consiste en une
+carte interactive de France (voir figure \ref{atlas_limsi_fig}) sur laquelle sont disséminées plus de 200 communes où
+des locuteurs ont enregistré des versions d’un même texte{ :} la fable d’Ésope \textit{La bise et le soleil}.
+Ces enregistrements, souvent retranscrits dans des graphies adaptées, permettent d’étudier des dialectes
+des diverses langues régionales françaises, et d’analyser la variation phonétique, lexicale ou morphologique
+dans un contexte de terrain. Grâce à cette ressource, nous avons pu intégrer des textes en occitan très variés
+phonétiquement, enrichissant le corpus avec des variations dialectales.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{atlas_limsi.png}
+    \caption{Carte de France de l'atlas LIMSI provenant du \href{https://atlas.lisn.upsaclay.fr/}{site de L'atlas}.}
+    \label{atlas_limsi_fig}
+\end{figure}
+
+Enfin, nous utilisons une traduction de la parabole du fils prodigue dans divers dialectes régionaux. 
+Cette parabole est un classique des enquêtes dialectologiques{ :} elle a été traduite dans de nombreuses 
+langues régionales, notamment via les enquêtes menées par Coquebert de Montbret au XIX\up{e} siècle. 
+Sur le plan linguistique, la version occitane de cette parabole (ainsi que des variantes en corse ou d’autres langues) 
+offre un point d’ancrage commun (texte pivot) qui facilite la comparaison entre dialectes et la détection de
+structures grammaticales, lexicales ou morphologiques typiques de chaque variété.
+
+\section{Analyse de données}
+
+\subsection{Données parallèles}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{lSSSSS}
+\hline
+\textbf{Données} & \textbf{Atlas LIMSI} & \textbf{Parcolab} & \textbf{Parabole du fils prodigue} & \textbf{Total} \\
+\hline
+Tokens & 7\ 922 & 35\ 371 & 11\ 729 & 55\ 022 \\
+Phrases & 305 & 1\ 485 & 537 & 2\ 327 \\
+Lemmes fr & 57 & 2\ 791 & 191 & 3\ 039 \\
+Textes fr & 1 & 9 & 1 & 11 \\
+Textes co & 6 & 9 & \NA & 15 \\
+Textes gsw & 7 & 9 & \NA & 16 \\
+Textes oc & 47 & 9 & 21 & 77  \\
+\hline
+\end{tabular}
+\\
+\smallskip
+(fr: français, co: corse, gsw: alsacien, oc: occitan)
+\smallskip
+\caption{Données statistiques des trois corpus parallèles.}
+\label{table_donnees_para}
+\end{table}
+
+Les données du tableau \ref{table_donnees_para} sont issus d'un programme python fait par nos soins.
+Ce dernier utilise la bibliothèque Spacy de manière à trouver le nombre (toutes langues confondues)
+de phrases, de tokens (hors ponctuations, avec apostrophes et contractions séparés en deux tokens),
+ainsi que le nombre de lemmes français. Aucun modèle Spacy n'existe pour l'alsacien, le corse et l'occitan,
+ce qui rend impossible une lemmatisation. Cette difficulté est exacerbée, car ces langues sont principalement orales
+et ne possèdent pas de norme orthographique stable.
+On retrouve dans notre corpus une majorité de textes en occitan (77), mais aussi 15 textes en corse et 16
+textes en alsacien. Cette répartition déséquilibrée s'explique principalement par la richesse dialectale de
+l'occitan, dont les nombreuses variétés régionales sont largement documentées dans l'Atlas LIMSI
+(dans notre cas surtout en provenance du Languedoc et de Nouvelle-Occitanie).
+Le fait que ParCoLab soit le corpus le plus textuellement riche (dû à la taille des textes
+présents dans celui-ci) explique qu’il présente également le nombre de tokens le plus élevé.
+
+D'un point de vue qualitatif, les trois corpus présentent des profils linguistiques très distincts qui se
+complètent utilement. ParCoLab offre des textes alignés au niveau des phrases dans un cadre méthodologique
+rigoureux, ce qui en fait la ressource la plus fiable pour l'entraînement du modèle. L'Atlas LIMSI,
+quant à lui, apporte une richesse dialectale considérable, notamment pour l'occitan dont les 47 variétés
+couvrent un spectre phonétique et lexical très large. Les transcriptions dialectales pouvant présenter
+des graphies très hétérogènes d'un locuteur à l'autre, cette variété amène aussi plus de bruit dans les données
+d'entraînement. La parabole du fils prodigue, elle, joue le rôle de texte pivot.
+En effet, sa structure narrative fixe facilitent la comparaison inter-dialectale, mais limitent en
+contrepartie la diversité lexicale et thématique des données.
+
+\begin{table}[H]
+\centering
+\begin{tabular}{lSSSS}
+\hline
+\textbf{Données} & \textbf{Français} & \textbf{Alsacien} & \textbf{Corse} & \textbf{occitan} \\
+\hline
+Fichiers & 11 & 16 & 15 & 77 \\
+Tokens & 10\ 070 & 9\ 677 & 9\ 601 & 25\ 674 \\
+Phrases & 363 & 423 & 418 & 1\ 123 \\
+Lemmes & 3\ 039 & \NA & \NA & \NA \\
+\hline
+\end{tabular}
+\caption{Données statistiques du corpus parallèles par langues.}
+\label{table_donnees_par_langues}
+\end{table}
+
+Le tableau \ref{table_donnees_par_langues} permet d'affiner cette analyse en comparant la répartition des
+données par langue. On constate que l'occitan domine très largement avec {25 674} tokens répartis sur 77 fichiers,
+contre respectivement {9 677} et {9 601} tokens pour l'alsacien et le corse. Cette surreprésentation de
+l'occitan peut nous poser problème. Celle-ci pourrait conduire à un classifieur moins performant sur les
+paires alsaciennes ou corses, qui disposent de moins d'exemples d'entraînement.
+Le corse et l'alsacien sont très similaires statistiquement. Cette similarité nous indique que les deux
+langues seront couvertes de manière quasi-égalitaire. Enfin, le nombre de lemmes français ({3 039}) constitue
+un indicateur indirect de la richesse lexicale des textes sources. En théorie, ce chiffre devrait être
+similaire quelle que soit la langue cible, les textes étant des traductions d'un même contenu.
+Cependant la lemmatisation des autres langues reste pour l'instant impossible à cause du manque de modèle Spacy
+pour celles-ci.
+
+\subsection{Données comparables}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{lSSSS}
+\hline
+\textbf{Données} & \textbf{Alsacien} & \textbf{Corse} & \textbf{Francais} & \textbf{Occitan} \\
+\hline
+Fichiers & 1\ 590 & 5 & 2\ 760 & 1\ 590 \\
+Tokens & 269\ 277 & 352 & 6\ 205\ 620 & 311\ 734 \\
+Phrases & 16\ 940 & 19 & 278\ 025 & 14\ 198 \\
+Lemmes & \NA & \NA & 1\ 868\ 027 & \NA \\
+\hline
+\end{tabular}
+\caption{Données statistiques du corpus comparable Wikipédia.}
+\label{table_donnees_comp}
+\end{table}
+
+Le tableau \ref{table_donnees_comp} représente les données du corpus comparable que nous utiliseront pour la
+phase de validation du modèle que nous allons créer.
+Celles-ci ont été obtenues via Wikipédia et les liens interlangues.
+Le programme va rechercher les articles en français ayant un lien interlangue avec l'alsacien et/ou le corse et/ou l'occitan.
+Dans le cas de l'alsacien, le programme cherche que les articles en alsacien et non dans les autres langues allémaniques en s'aidant
+des liens Wikipédia, ceux en alsacien provenant de l'adresse \href{https://als.wikipedia.org/}{https://als.wikipedia.org/}.
+Pour ce faire, nous avons utilisé le programme\footnote{\href{https://gitlab.com/memoire5005040/fragments_paralleles}{Le programme "fragment\_paralleles" de P. Tsolakis}} de \citet{tsolakis_2024}
+Le programme original a pour but de récupérer
+les articles en corse, luxembourgeois et occitan ainsi qu'en français, anglais, allemand, italien et espagnol.
+Ensuite le programme sélectionne 10 phrases provenant de 15 articles aléatoires pour chaque langue traitée
+de manière à trouver des paires de phrases candidates.
+Nous n'utilisons que la première partie du programme (modifiée pour les langues que nous étudions) car elle nous permet de retrouver
+tous les articles ayant un lien interlangue entre le français et les langues régionales{ :} alsacien, corse et occitan.
+
+Le français domine massivement avec plus de 6 millions de tokens répartis sur {2 760} fichiers, reflétant la
+richesse et la maturité de la communauté Wikipédia francophone. L'alsacien, avec {269 277} tokens sur {1 590}
+fichiers, se démarque nettement des deux autres langues régionales et témoigne de la contribution
+de ses locuteurs, qui intègre notamment les dialectes mulhousien et strasbourgeois (voir en quelle proportion dans le tableau \ref{table_dialectes_gsw}).
+
+\begin{table}[H]
+\centering
+\begin{tabular}{lSSS}
+\hline
+\textbf{Données} & \textbf{Alsacien} & \textbf{Mulhousien} & \textbf{Strasbourgeois} \\
+\hline
+Fichiers & 1\ 194 & 392 & 4 \\
+Tokens & 146\ 675 & 120\ 717 & 1\ 885 \\
+Phrases & 10\ 860 & 5\ 993 & 87 \\
+\hline
+\end{tabular}
+\caption{Tableau de décomposition de l'alsacien et de ses dialectes.}
+\label{table_dialectes_gsw}
+\end{table}
+
+Cette variété dialectale interne à l'alsacien constitue un atout pour évaluer la robustesse du modèle face
+à des graphies divergentes, mais introduit également une complexité supplémentaire que les données
+d'entraînement parallèles, plus homogènes, ne couvrent qu'en moindre mesure.
+
+L'occitan, avec {311 734} tokens sur {1 590} fichiers, présente un volume intermédiaire cohérent avec sa présence
+sur Wikipédia.
+Le corse, en revanche, apparaît très faiblement représenté avec seulement 352 tokens sur 5 fichiers,
+soit un volume environ 60 fois inférieur à celui de l'alsacien. Ce volume extrêmement bas
+d'articles doit être dû à un manque d'utilisateurs ajoutant des pages en corse sur Wikipédia. Cette disproportion est préoccupante pour
+la phase de validation{ :} le modèle disposera de très peu d'exemples pour être évalué, ce qui limitera la
+portée des conclusions tirées sur les performances du classifieur pour cette langue.
+
+D'un point de vue qualitatif, les textes Wikipédia présentent une hétérogénéité thématique et stylistique
+bien plus grande que les corpus parallèles. Cette diversité est à la fois un avantage et une difficulté.
+Elle permet de tester la généralisation du modèle au-delà des genres textuels vus à l'entraînement, mais
+elle expose aussi le classifieur à des registres, des vocabulaires spécialisés et des structures discursives
+pour lesquels il n'a pas été préparé. Cette tension entre la richesse du corpus de validation et les
+limites du corpus d'entraînement constituent une contrainte importante dont il faudra tenir
+compte dans l'interprétation des résultats.

@@ -1,0 +1,388 @@
+\chapter{Méthodes d’alignement}
+
+Les premières méthodes d’alignement automatique de phrases reposaient principalement sur
+des approches statistiques basées sur la longueur des segments. L’algorithme proposé par
+\citet{gale_1991} constitue un exemple fondateur. Il exploite la corrélation entre la
+longueur des phrases dans deux langues pour établir des correspondances probabilistes.
+Ces méthodes ont posé les bases des approches modernes, aujourd’hui enrichies par des
+représentations vectorielles et des modèles neuronaux.
+
+L'une des directions clés de la recherche pour le TAL moderne consiste à apprendre dans un environnement se basant sur les langues peu dotées.
+\citep{hedderich_2021, artemova_2023}. Cette affirmation vient confirmer ce que nous avons présenté
+auparavant dans les chapitres de l'état de l'art. Maintenant la question n'est plus d'expliquer les
+problématiques et définitions de notre environnement, mais plutôt les solutions élaborées par le passé.
+Ces méthodes d'alignement sont très pratiques et il est préférable que nous les présentions par projet.
+
+Il est important de noter que les données parallèles pour les langues peu dotées sont souvent en petit nombre, la qualité
+de ces données est donc primordial. Il faut donc limiter au maximum les données présentant des phrases atypiques,
+ayant des rapport de longueur trop grand ou trop petit, ou un texte se chevauchant entre langue source et langue cible.
+Ces phrases risquent de se retrouver dans les données parallèles et posent un problème dans le contexte de la traduction
+automatique par réseau neuronal moderne, qui dépend énormément de la bonne qualité des ressources
+d'entraînement \citep{tan_2022}. Des méthodes non-supervisées ont été proposées pour pallier ce problème, comme
+l'entraînement sur des corpus monolingues seuls \citep{artetxe_2018, lample_2018}. Cependant,
+\citet{steingrimsson_2021} nous expliquent que d'autres travaux par \citet{kim_2020} montrent que des méthodes
+supervisées et semi-supervisées avec de petits corpus parallèles seront toujours meilleures que des méthodes
+non-supervisées pour beaucoup de langues. Le manque de ressources parallèles existantes pour les langues peu
+dotées implique qu'il faudrait plutôt utiliser des corpus comparables en supplément de corpus parallèles.
+Ces données permettraient l'entraînement de réseaux neuronaux modernes afin d'atteindre une meilleure qualité sur des modèles plus récents
+\citep{steingrimsson_2023}.
+
+\section{Principes fondamentaux}
+
+Les réseaux de neurones récurrents (RNN) et leurs variantes à mémoire à long terme (LSTM) ont constitué
+une étape importante dans le traitement des séquences textuelles avant l'apparition des \gls{transformers}. Ces architectures
+ont été largement utilisées dans les premières méthodes d'alignement basées sur des réseaux neuronaux, notamment
+pour modéliser les dépendances entre phrases source et cible. Les méthodes d'alignement neuronal ont progressivement
+remplacé les approches purement statistiques en permettant de capturer des similarités sémantiques au-delà des
+simple heuristiques de longueur ou de fréquence de mots. Cette évolution a ouvert la voie aux approches modernes
+fondées sur les transformers et les plongements multilingues, qui constituent le socle des méthodes d'alignement
+actuelles.
+
+\subsection{RNN et LSTM}
+
+Les RNN (\textit{Recurrent Neural Networks}) sont des réseaux neuronaux conçus pour traiter des
+données séquentielles, comme du texte ou des paroles.
+Contrairement aux réseaux neuronaux classiques (feed-forward), les RNN possèdent une mémoire interne.
+L’état calculé à un instant donné dépend non seulement de l’entrée actuelle, mais aussi de l’état précédent.
+\[ h_{t}=f(W_{x_{t}}+U_{h_{t-1}}+b) \]
+où:
+\begin{itemize}
+    \item \( x_{t} \) est l'entrée au temps \( t \)
+    \item \( h_{t-1} \) est l'état précédent
+    \item \( W, U, b \) sont des paramètres appris
+\end{itemize}
+L'avantage principal des RNN est de modéliser naturellement l’ordre des mots.
+Cependant ils présentent deux limites importantes{ :}
+\begin{itemize}
+    \item Le modèle a du mal à apprendre des dépendances longues
+    \item Chaque état dépendant du précédent, l'entraînement est fortement ralenti
+\end{itemize}
+
+Les LSTM (\textit{Long Short-Term Memory}) ont été introduits par \citet{hochreiter_1997} pour résoudre le problème des dépendances longues.
+Au lieu d’avoir une seule mémoire simple, les LSTM introduisent une mémoire cellulaire contrôlée par des portes.
+Les portes décident quelles informations sont à garder et à transmettre.
+On peut voir les LSTM comme une mémoire intelligente qui retient les informations importantes et oublie les informations
+qui ne sont plus pertinentes, ce qui permet une mise à jour du contexte contrôlé.
+Malgré ces améliorations, les LSTM restent lents et deviennent lourds dans le cas de séquences longues.
+
+\subsection{Principe de transformer}
+
+Le transformer est une architecture de réseau neuronal introduite par \citet{vaswani_2017}.
+Cette architecture a profondément transformé le traitement automatique des langues en remplaçant
+les architectures récurrentes (RNN, LSTM) par un mécanisme reposant entièrement sur l’attention.
+Contrairement aux modèles séquentiels classiques, le transformer ne traite pas les mots d’une phrase
+un par un. Il traite l’ensemble de la séquence simultanément. Son idée centrale est la suivante{ :}
+pour comprendre un mot dans une phrase, il faut pouvoir mesurer son importance relative par
+rapport à tous les autres mots de la phrase. Cette opération est réalisée via un mécanisme appelé auto-attention.
+
+Chaque mot est transformé en un vecteur numérique (\textit{embedding} ou plongement en français).
+À partir de ce plongement, trois vecteurs sont calculés{ :}
+\begin{itemize}
+    \item Query (Q)
+    \item Key (K)
+    \item Value (V)
+\end{itemize}
+À partir de ces vecteurs nous calculons l'attention, définie de cette manière{ :}
+\[ Attention(Q,K,V)=softmax(\frac{QK^{T}}{\sqrt{d_{k}}})V \]
+où \( d_{k} \) est la dimension des vecteurs Key (facteur de stabilisation).
+Ce calcul utilise la fonction \textit{\gls{fonction softmax}}, une fonction
+mathématique utilisée pour transformer un vecteur de valeurs réelles (appelées logits)
+en une distribution de probabilités.
+
+Le transformer n'utilise pas qu'une seule attention mais plusieurs "têtes" d'attention. Qui
+permettent de capter plusieurs types de relations (comme les relations syntaxiques ou sémantiques).
+Ces sorties sont ensuite concaténées puis projetées dans un nouvel espace vectoriel.
+Le transformer traitant tous les mots en même temps, il ajoute aux plongements des vecteurs
+de position. Ceux-ci permettent de savoir le positionnement des mots les uns par rapport aux autres 
+et la distance entre ceux-ci.
+
+Ce modèle présente plusieurs avantages, comme{ :}
+\begin{itemize}
+    \item Une meilleure gestion des dépendances longues
+    \item Une vitesse d'entraînement bien plus rapide sur GPU due à la parallélisation des calculs
+    \item La représentation contextuelle des mots
+\end{itemize}
+     
+Cependant il est à noter que les transformers présentent aussi certains désavantages, comme{ :}
+\begin{itemize}
+    \item Un besoin de données en grandes quantités (complexe, dans notre cas par exemple)
+    \item Une architecture beaucoup plus lourde tournant difficilement sur de plus petites machines.
+\end{itemize}
+
+Ces principes fondamentaux sont la base de la majorité des projets de TAL moderne. De nos jours, la vaste majorité
+des projets se basent sur le principe de transformer, celui-ci étant l'un des plus performants pour ce domaine
+d'application. Les projets sur lesquels nous allons nous baser dans ce mémoire se basent sur les transformer de
+manière à être le plus efficace dans les tâches de traitement linguistique.
+
+\section{BERT et SBERT}
+
+BERT \citep{devlin_2019} (\textit{Bidirectional Encoder Representations from Transformers}) et RoBERTa
+\citep{liu_2019} sont des modèles de transformer encodeur pré-entraînés. Un transformer encodeur est un transformer permettant
+de traiter des séquences d'entrée et de générer des représentations viables dans un contexte donné. Les décodeurs, quant à eux
+vont générer une sortie en se basant sur les représentations encodées. Les décodeurs s'assurent que chaque token généré
+se base sur les tokens précédents. À l'époque de leur création, les modèles de type BERT
+étaient très performants pour les tâches de comparaison de paires de mots telles que la \gls{similarité sémantique}.
+En français, deux modèles principaux se basent sur BERT{ :} CamemBERT 
+\citep{martin_2020} et FlauBERT \citep{le_2020}. Ces deux modèles sont entraînés sur des données d'un corpus
+français hétérogène, BERT ne se basant uniquement que sur des données d'entraînement en anglais.
+
+BERT est entraîné de manière auto-supervisée en utilisant 2 tâches principales{ :}
+\begin{itemize}
+    \item MLM (\textit{Masked Language Modeling}){ :} on masque aléatoirement environ 15 \% des mots d’une phrase,
+    avant de demander au modèle de prédire les mots masqués en utilisant le contexte entourant le mot caché.
+    \item NSP {\textit{Next Sentence Prediction}}{ :} on donne au modèle deux segments de texte, puis on demande de
+    prédire si le second segment suit réellement le premier dans le texte d’origine.
+\end{itemize}
+Cet entraînement génère des représentations vectorielles pour chaque token et des tokens de classification (CLS-Token)
+donnant une représentation globale de la phrase.
+
+Plus tard \citet{reimers_2019} présentent SBERT ou sentence-BERT qui se base sur le modèle pré-entraîné 
+BERT. L'objectif de SBERT est de transformer BERT en un modèle capable de générer directement des plongements
+de phrases de taille fixe, tout en préservant leur signification sémantique. Plutôt que de traiter
+chaque phrase de manière indépendante et de concaténer les sorties, SBERT utilise un réseau siamois
+qui encode les deux phrases simultanément, permettant un calcul efficace de similarité.
+
+Pour ce faire, SBERT va d'abord prendre le résultat de sortie de BERT afin d'en dériver un plongement de phrases de taille
+fixe. On fait ensuite la médiane des vecteurs de sorties des 2 phrases, établis en utilisant la méthode de calcul
+CLS-Token de BERT. On utilise ensuite des structures de \gls{réseau siamois} et triplets
+dérivant des \gls{plongement lexicaux}, technique représentant un mot par une liste de nombres
+qui encode les mots par similarité d'utilisation, ensuite comparé par \gls{similarité cosinus}.
+Ces plongements sont ensuite concaténés et classifiés en utilisant la fonction softmax.
+Celle-ci permet d'optimiser l'entropie croisée. Cette amélioration réduit le temps pour trouver les paires de phrases les plus
+similaires à 5 secondes au lieu de {65 heures} tout en gardant la précision de BERT. La figure \ref{SBERT_schema} présente le fonctionnement
+d'un réseau siamois SBERT.
+
+Dans ce mémoire, l'utilisation de SBERT s'impose pour deux raisons principales. D'une part, BERT
+nécessite de comparer chaque paire de phrases de manière individuelle, ce qui rend la recherche
+dans un large corpus prohibitif en temps de calcul. D'autre part, le token [CLS] de BERT n'a pas
+été explicitement optimisé pour la similarité de phrases, contrairement à l'approche de SBERT qui
+a été entraînée spécifiquement sur des tâches de similarité sémantique.
+De plus, d'après \citet{reimers_2019} SBERT surpasse les autres méthodes de \gls{plongement de phrases} (sentence embedding)
+pour des tâches de similarité sémantique communes comme l'identification de paraphrase, la recherche sémantique
+ou encore l'entailment/contradiction (détermine si une phrase A implique une phrase B, contredit B
+ou n'ont pas de lien).
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{SBERT_schema.png}
+    \\
+    \smallskip
+    \small{Schéma se basant sur la figure 2 du travail d'\citet{ortakci_2024} et sur la figure 6 du travail de \citet{mokoatle_2022}}
+    \smallskip
+    \caption{Schéma du fonctionnement de SBERT (réseau siamois).}
+\label{SBERT_schema}
+\end{figure}
+
+\newpage
+
+\section{Paracrawl et bitextes}
+
+\href{https://paracrawl.eu/}{ParaCrawl} \citep{banon_2020} est un robot d'exploration du web
+(et outil open-source) permettant le développement de larges corpus parallèles de textes traduits
+pour les langues officielles de l'Union européenne. Des outils tels que Hunalign \citep{varga_2007} sont
+utilisés pour l'alignement de phrases pour des paires de documents dans le projet ParaCrawl
+\citep{tan_2022}. Hunalign est un projet qui utilise des {« }heuristiques telles que la longueur des phrases
+ou la fréquence des mots pour trouver des paires de phrases dans deux documents.{ »}
+\footnote{{« }[...] heuristics such as sentence length and word frequency to find matching sentence pairs in
+two documents.{ »} \citep{tan_2022} notre traduction}
+\citep{tan_2022}
+
+ParaCrawl mine des bitextes en passant par 4 étapes majeures \citep{tan_2022} { :}
+\begin{enumerate}
+\item Exploration de sites web{ :} pour collecter du contenu provenant du web.
+\item Alignement documentaire{ :} trouve les documents qui s'alignent dans
+différentes langues.
+\item Alignement des phrases{ :} trouver des paires de phrases correspondantes
+alignées dans les documents alignés précédemment. Alignement au niveau du contenu.
+\item Filtrage des phrases{ :} filtrer les paires de phrases de mauvaise qualité et
+utiliser le reste comme des données parallèles propres.
+\end{enumerate}
+
+Le projet de \citet{tan_2022} s'intéresse tout particulièrement aux étapes 3 et 4 et vise à les
+améliorer par l'utilisation de meilleures fonctions d'évaluation de qualité d'alignement. Ils essaient 
+principalement de réaliser
+cette amélioration pour une paire de langues peu dotées (pachto et khmer). Ainsi \citet{tan_2022}
+décident d'affiner le fonctionnement d'un modèle de transformer de phrases 
+afin d'aligner et de filtrer
+des phrases pour les langues peu dotées recherchées.
+\citet{tan_2022} utilisent un système d'apprentissage
+auto-supervisé \citep{chen_2020, henderson_2017} afin d'affiner le fonctionnement des modèles BERT
+\citep{devlin_2019} et \allowbreak SBERT \citep{reimers_2019}.
+L'objectif est de rendre le modèle plus précis sur une tâche particulière en le ré-entraînant sur un jeu de données
+plus petit. Pour affiner le fonctionnement de ces transformers,
+\citet{tan_2022} décident de construire des paires positives et négatives pour entraîner les modèles par
+\gls{MNRL} (\textit{Multiple Negative Ranking Loss}).
+Dans cette approche, chaque phrase source est associée à sa vraie traduction (positive).Toutes les autres phrases
+cibles du batch sont considérées comme des négatives pour cette phrase source. Le modèle est entraîné à maximiser
+la similarité de la vraie paire tout en minimisant la similarité avec toutes les autres paires du batch, ce qui
+permet d'exploiter la diversité des comparaisons sans nécessiter de négatives explicites.
+
+Le but est de faire en sorte que le modèle maximise la différence entre ces paires positives et négatives afin
+de faciliter sa reconnaissance de phrases similaires tout en écartant les phrases inutilisables.
+Les résultats de \citet{tan_2022} montrent une meilleure production de données d'entraînement (ici des bitextes)
+pour la traduction par réseau neuronal qui aura lieu en aval de la récupération des données d'entraînement.
+Ces données sont récupérées grâce au modèle SBERT \citep{reimers_2019}
+combiné avec Vecalign \citep{thompson_2019} pour aligner les phrases présentes dans les données puis les filtrer à l'aide d'un score basé sur la marge. 
+Vecalign est une méthode d'alignement de phrases introduite par \citet{thompson_2019} qui se distingue par sa complexité
+linéaire en temps et en espace par rapport au nombre de phrases alignées. Contrairement aux méthodes précédentes qui nécessitaient un système
+de traduction automatique, Vecalign ne requiert que des plongements de phrases bilingues pour établir des alignements. Cette approche
+permet d'aligner des corpus à grande échelle avec une efficacité supérieure aux méthodes passées, tout en nécessitant moins de
+ressources computationnelles.
+Le score réalisé avec Vecalign et SBERT correspond à la différence entre la similarité (ou distance) d’une paire de phrases considérée et la similarité
+entre cette même phrase et la phrase la plus proche parmi les négatives. Cette dernière permet de pallier les problèmes
+d'inconsistances d'échelles donnant un résultat plus fiable que d'autres méthodes.
+
+\newpage
+
+\section{CLIR et plongement lexical}
+
+Le \gls{CLIR} (\textit{crosslingual information retrieval} - 
+récupération d'information inter-langue) désigne l’ensemble des méthodes permettant
+d’effectuer une recherche d’information dans une langue différente de celle de la requête.
+Un utilisateur formule une requête dans une langue source, et le système
+identifie des documents pertinents rédigés dans une langue cible. Les approches de CLIR
+reposent sur la traduction de la requête ou des documents via des dictionnaires
+bilingues ou des systèmes de traduction automatique. Plus récemment, elles utilisent des
+représentations vectorielles multilingues qui projettent différentes langues dans un espace sémantique partagé,
+permettant ainsi de comparer directement des textes. Le CLIR
+constitue une base théorique importante pour l’alignement multilingue, puisqu’il vise déjà
+à mesurer la similarité sémantique entre des textes dans des langues différentes.
+
+Dans le cadre de ce mémoire, utiliser
+un aligneur de documents constitue une étape stratégique. Avant de rechercher
+des correspondances au niveau des phrases ou des segments, il est nécessaire de restreindre
+l’espace de recherche à des documents traitant du même sujet. L’alignement documentaire permet
+ainsi de regrouper des textes susceptibles de contenir des segments parallèles, ce qui réduit
+considérablement le bruit et le coût de calcul.
+
+FaDA (\textit{Fast Document Aligner} - aligneur de document rapide) \citep{lohar_2016} est un outil d'alignement
+de documents multilingues se basant sur un algorithme CLIR. Un
+aligneur de documents inter-langue vise à extraire des candidats probables de documents
+alignés venant d'un corpus comparable multilingue \citep{lohar_2016}. D'autres projets présentent des méthodes
+se basant sur différents niveaux (titre de document, mots ou encore caractères dans certaines langues) comme les travaux de
+\citet{yang_2003} ou encore le système de requête sur bases de données pour des lexiques bilingues présentés
+par \citet{munteanu_2005}.
+
+\citet{lohar_2016} proposent une méthode de plongement lexical vectoriel.
+Plus des mots sont utilisables dans le même contexte, plus leurs vecteurs sont proches. Cette stratégie permet
+de vérifier la similarité des mots d'une manière optimisée.
+À cette méthode, \citet{lohar_2016} incorporent une approche basée sur la
+CLIR pour estimer la similarité sémantique entre deux documents de langue source et langue cible. Leur système
+commence par indexer les documents de langue source et langue cible. Les documents sources sont utilisés pour
+faire une pseudo-requête composée d'une fraction des termes constituant les documents dans la langue source.
+Les termes choisis sont trouvés à partir d'un score basé sur une équation où {« }$tf(t,d)$ dénote la fréquence
+d'un terme $t$ dans un document $d$, $len(d)$ dénote la longueur de $d$ et $N$ et $df(t)$ dénotent respectivement
+le nombre total de documents et le nombre de documents dans lesquels $t$ apparaît. De plus, $\tau(t,d)$
+représente le score de sélection des termes.{ »} \citep{lohar_2016} \footnote{{« }$tf(t, d)$ denotes the term frequency of a
+term $t$ in document $d$, $len(d)$ denotes the length of $d$, and $N$ and $df(t)$ denote the total number of documents and the
+number of documents in which $t$ occurs, respectively. Furthermore, $\tau(t, d)$ represents the term-selection score{ »} Notre traduction}.
+
+\[ \tau(t,d)=\lambda\frac{tf(t,d)}{len(d)}+(1-\lambda)log(\frac{N}{df(t)}) \]
+
+Les termes en langue source sont ensuite traduits via un dictionnaire vers la langue cible indexée avant
+d'être utilisés pour réaliser une comparaison entre la liste de termes et les documents dans la langue cible.
+Cette méthode de comparaison permet d'extraire les meilleurs documents et de sélectionner celui avec le
+meilleur score pour avoir le meilleur candidat pour l'alignement.
+
+Plus précisément, \citet{steingrimsson_2021} utilisent FaDA ainsi qu'une technique de scoring de phrases candidates basée sur
+le plongement contextualisé et d'autres alignements par mot de haute précision. Enfin, un classifieur
+sélectionne des paires de phrases en se basant sur ces scores. 
+
+\citet{steingrimsson_2021} utilisent FaDA pour produire un ensemble de candidats
+(typiquement 10 phrases cibles par phrase source, dans les deux directions de traduction). Pour filtrer ces candidats,
+ils combinent deux scores complémentaires. D'une part un score basé sur les plongements de phrases LaBSE \citep{feng__2022},
+un modèle BERT considéré comme meilleur que LASER \citep{artetxe_2019} (autre modèle produisant des
+embeddings multilingues comparables directement par similarité cosinus), celui-ci peut être utilisé pour le
+calcul de similarité entre des phrases. Il se base sur une fonction de perte de type \textit{translation ranking} et un
+bi-\textit{encoder}. La \textit{translation ranking loss} consiste à présenter au modèle une phrase dans la langue source accompagnée de sa traduction correcte
+(positif) et de plusieurs traductions incorrectes tirées d'autres documents (négatifs). Le modèle est entraîné à maximiser la similarité
+de la paire correcte tout en minimisant celle des paires incorrectes. L'architecture bi-encoder encode la phrase source et
+la phrase cible indépendamment dans deux encodeurs identiques, puis calcule leur similarité par produit scalaire. Cette approche est plus efficace que
+l'encodeur-décodeur classique car les plongements peuvent être précalculés et indexés pour une recherche rapide.
+D'autre part \citet{steingrimsson_2021} utilisent un score original nommé WAScore, calculé à partir d'alignements de mots de haute précision obtenus via
+CombAlign \citep{steingrimsson_combalign_2021}. Celle-ci combine trois outils d'alignement (AWESoME \citep{dou_2021},
+eflomal \citep{ostling_2016}, fast\_align \citep{dyer_2013}) en visant la précision plutôt que le rappel.
+Le WAScore est défini comme le produit des proportions de mots alignés dans les deux directions (\( (sa/s) \times (ta/t) \)), où \(s\) et \(t\)
+sont les longueurs des phrases source et cible, et \(sa\) et \(ta\) le nombre de mots alignés. Cette formulation pénalise les paires de longueurs
+très disparates et favorise les phrases dont la plupart des mots sont mutuellement alignés. Ces deux scores (LaBSE \citep{feng__2022} et WAScore) sont ensuite
+combinés par un classifieur de régression logistique entraîné sur des paires étiquetées manuellement, qui prédit si une paire de phrases est
+parallèle ou non. Le caractère utile des phrases parallèles extraites est confirmé par l'entraînement de systèmes de traduction neuronale.
+L'ajout des données extraites depuis Wikipedia augmente le score BLEU de 9 points par rapport au corpus
+parallèle de référence seul.
+
+\section{Réutilisation de segments parallèles}
+
+\citet{steingrimsson_2023} ont réalisé des travaux de recherche sur la ré-examination de données
+d'entraînement parallèles rejetées car elles ne passent pas un test d'équivalence sémantique (rapport de longueur impair,
+texte se chevauchant entre langue source et langue cible, ...) en les segmentant avant d'extraire sémantiquement d'autres segments
+bilingues équivalents. Plus précisément, \citet{steingrimsson_2023} appliquent un découpage basé sur la ponctuation forte (points,
+points d'exclamation, points d'interrogation) pour diviser les phrases en segments plus courts. Ensuite,
+ils comparent chaque segment avec son équivalent potentiel dans l'autre langue en utilisant LASER \citep{artetxe_2019}, LaBSE \citep{feng__2022} et WAScore.
+Les segments qui atteignent un score de similarité suffisant sont conservés comme données parallèles exploitables,
+même si la phrase complète avait été rejetée. La méthode se base sur l'entraînement de modèles de traduction
+automatique neuronale (\textit{Neural Machine Translation} (NMT)) séparés pour les deux directions de la traduction.
+Dans leur cas, de l'anglais au bengali et inversement. \citet{steingrimsson_2023} utilisent ces 3 méthodes de scoring
+afin de donner un score à chacune des paires de phrases parallèles.
+
+Les paires de phrases sont ensuite filtrées et classées avec un classifieur à \gls{régression logistique}
+utilisant le score concaténé précédemment établi à l'aide de LASER, LaBSE et WAScore.
+Une fois classées, un score \gls{BLEU} est établi sur les paires extraites d'un corpus anglais-bengali déjà réalisé par
+\citet{ramesh_2022}. Le score BLEU établi est ici utiliser pour évaluer la qualité des traductions générées par divers modèles
+créé par \citet{steingrimsson_2023} se basant sur le corpus Samanantar de \citet{ramesh_2022} entre elles.
+Le score BLEU est une méthode de calcul de précision{ :}
+
+Sous la forme{ :}
+\[ BLEU=min(1,exp(1-\frac{reference-longueur}{sortie-longueur}))(\prod_{i=1}^{4}precision_{i}^{1/4}) \]
+Où{ :}
+\begin{itemize}
+    \item $reference$ désigne la traduction de référence produite par un humain, considérée comme correcte ou acceptable.
+    \item $sortie$ correspond au texte généré par le système de traduction automatique.
+    \item $longueur$ correspond au nombre total de mots (ou tokens) présents dans un texte.
+    \item Dans $precision_{i}^{1/4}$, $1/4$ correspond à la taille des n-grammes allant de 1 à 4
+\end{itemize}
+et $precision_{i}$ correspond à{ :}
+\[ precision_{i}=\frac{\sum_{snt \in Cand-Corpus}\sum_{i \in snt}min(m^{i}_{cand},m^{i}_{ref})}{w^{i}_{t}=\sum_{snt' \in Cand-Corpus}\sum_{i' \in snt'}m^{i'}_{cand}} \]
+Où{ :}
+\begin{itemize}
+    \item $m^{i}_{cand}$ est le nombre d'i-grammes correspondant à la traduction de référence.
+    \item $m^{i}_{ref}$ est le nombre d'i-grammes dans la traduction de référence.
+    \item $w^{i}_{t}$ est le nombre d'i-grammes dans la traduction automatique.
+    \item $snt$ signifie \textit{sentence} soit{ :} $snt \in Cand-Corpus$ l'ensemble des phrases 
+    produites par le système de traduction automatique.
+\end{itemize}
+
+Le score BLEU final est compris entre zéro et un représentant
+l'exactitude d'une traduction. Le score est souvent représenté sous forme de pourcentage, au-dessus de 30 \%,
+la traduction est considérée comme bonne. Il se base sur une correspondance de \gls{n-gramme} et une pénalité de concision.
+Elle pénalise les traductions générées trop courtes par rapport
+aux traductions de référence. La correspondance de n-gramme compte le nombre de n-grammes (allant de unigrammes à quadrigrammes)
+correspondant à leurs équivalents dans la traduction de référence.
+
+En utilisant cette méthode, \citet{steingrimsson_2023} ont améliorer la qualité du corpus d'entraînement tout 
+en augmentant le score BLEU de 1,6 dans le cas de la traduction anglais-bengali. Le but étant de
+démontrer qu'en ajoutant des données partiels supplémentaires à un corpus pouvait améliorer la qualité des traductions de celui-ci.
+Ce système, entraîné sur moins de données, montre de meilleurs 
+résultats que des tests se basant sur un modèle de transformer référentiel.
+Par « modèle de transformer référentiel », \citet{steingrimsson_2023} désignent
+un modèle transformer standard entraîné sur l'intégralité des données parallèles disponibles
+(sans réutilisation des segments rejetés). Il sert de base pour comparer
+les performances de leur approche optimisée.
+
+Ce dernier est entraîné avec Fairseq \citep{ott_2019}. Fairseq est un outil open-source pour {« }l'entraînement de modèles de traduction, de résumé, 
+de modélisation linguistique et d'autres tâches de génération. { »}\footnote{{« }train custom models for 
+translation, summarization, language modeling, and other text generation tasks.{ »} \citep{ott_2019} 
+notre traduction} \citep{ott_2019}. \citet{steingrimsson_2023} l'utilise ici car il s'agit de la bibliothèque de référence pour l'entraînement
+de modèles de traduction automatique neuronale à grande échelle.
+Elle offre une implémentation optimisée du transformer et a été utilisée dans la majorité des
+travaux de recherche sur la traduction neuronale, ce qui permet de comparer directement les résultats avec la littérature existante.
+Dans leur méthode, Fairseq utilise un vocabulaire de 32 000 termes encodés par paires de byte. 
+Celui-ci était évalué automatiquement selon le score BLEU et les mêmes ensembles de données que les modèles 
+principaux.
+
+\vspace{5mm}
+
+Cette revue des méthodes d'alignement, des fondamentaux statistiques aux approches neuronales modernes,
+illustre comment la recherche a progressivement déplacé l'axe des heuristiques de longueur vers des
+représentations sémantiques multilingues. La section suivante analyse l'état de l'art de manière critique
+et retrace les limites, avant de présenter les données exploitées et la méthodologie que nous avons
+développée pour identifier des fragments parallèles dans des corpus comparables de langues régionales de France.
