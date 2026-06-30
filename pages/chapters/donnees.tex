@@ -1,9 +1,9 @@
 \chapter{Données}
 
-Dans le cadre de ce mémoire, les données textuelles exploitées reposent sur trois ressources principales{ :}
+Dans le cadre de ce mémoire, les données textuelles exploitées reposent sur trois ressources principales~:
 le projet ParCoLab, l’Atlas sonore des langues régionales du LIMSI, et une traduction de la parabole du
 fils prodigue. Ces corpus ont été choisis pour leur richesse linguistique, correspondant aux attentes de
-notre projet. En effet, ces 3 projets s'intéressent aux langues régionales de France particulièrement l'alsacien,
+notre projet. En effet, ces 3 projets s'intéressent aux langues régionales de France, particulièrement l'alsacien,
 le corse et l'occitan.
 
 Le corpus ParCoLab (ParCoLab – Multilingual Parallel Corpus) \citep{stosic_2024} constitue la base la plus
@@ -17,7 +17,7 @@ Ces textes sont alignés au niveau des phrases, ce qui permet d’effectuer des 
 L’Atlas sonore des langues régionales du LIMSI (Laboratoire LIMSI, CNRS) \citep{boulademareuil_2017} est
 une ressource patrimoniale remarquable. Ce projet consiste en une
 carte interactive de France (voir figure \ref{atlas_limsi_fig}) sur laquelle sont disséminées plus de 200 communes où
-des locuteurs ont enregistré des versions d’un même texte{ :} la fable d’Ésope \textit{La bise et le soleil}.
+des locuteurs ont enregistré des versions d’un même texte~: la fable d’Ésope \textit{La bise et le soleil}.
 Ces enregistrements, souvent retranscrits dans des graphies adaptées, permettent d’étudier des dialectes
 des diverses langues régionales françaises, et d’analyser la variation phonétique, lexicale ou morphologique
 dans un contexte de terrain. Grâce à cette ressource, nous avons pu intégrer des textes en occitan très variés
@@ -30,8 +30,10 @@ phonétiquement, enrichissant le corpus avec des variations dialectales.
     \label{atlas_limsi_fig}
 \end{figure}
 
-Enfin, nous utilisons une traduction de la parabole du fils prodigue dans divers dialectes régionaux. 
-Cette parabole est un classique des enquêtes dialectologiques{ :} elle a été traduite dans de nombreuses 
+Enfin, nous utilisons une traduction de la 
+\href{https://gallica.bnf.fr/ark:/12148/bd6t5334045p/f1.item#}{parabole du fils prodigue}\footnote{Traductions provenant du livre l'enfant prodigue en 88 patois divers de France, par Léopold FAVRE}
+dans divers dialectes régionaux.
+Cette parabole est un classique des enquêtes dialectologiques~: elle a été traduite dans de nombreuses 
 langues régionales, notamment via les enquêtes menées par Coquebert de Montbret au XIX\up{e} siècle. 
 Sur le plan linguistique, la version occitane de cette parabole (ainsi que des variantes en corse ou d’autres langues) 
 offre un point d’ancrage commun (texte pivot) qui facilite la comparaison entre dialectes et la détection de
@@ -64,9 +66,9 @@ Textes oc & 47 & 9 & 21 & 77  \\
 \label{table_donnees_para}
 \end{table}
 
-Les données du tableau \ref{table_donnees_para} sont issus d'un programme python fait par nos soins.
+Les données du tableau \ref{table_donnees_para} sont issues d'un programme Python fait par nos soins.
 Ce dernier utilise la bibliothèque Spacy de manière à trouver le nombre (toutes langues confondues)
-de phrases, de tokens (hors ponctuations, avec apostrophes et contractions séparés en deux tokens),
+de phrases, de tokens (hors ponctuations, avec apostrophes et contractions séparées en deux tokens),
 ainsi que le nombre de lemmes français. Aucun modèle Spacy n'existe pour l'alsacien, le corse et l'occitan,
 ce qui rend impossible une lemmatisation. Cette difficulté est exacerbée, car ces langues sont principalement orales
 et ne possèdent pas de norme orthographique stable.
@@ -84,14 +86,14 @@ quant à lui, apporte une richesse dialectale considérable, notamment pour l'oc
 couvrent un spectre phonétique et lexical très large. Les transcriptions dialectales pouvant présenter
 des graphies très hétérogènes d'un locuteur à l'autre, cette variété amène aussi plus de bruit dans les données
 d'entraînement. La parabole du fils prodigue, elle, joue le rôle de texte pivot.
-En effet, sa structure narrative fixe facilitent la comparaison inter-dialectale, mais limitent en
+En effet, sa structure narrative fixe facilite la comparaison inter-dialectale, mais limite en
 contrepartie la diversité lexicale et thématique des données.
 
 \begin{table}[H]
 \centering
 \begin{tabular}{lSSSS}
 \hline
-\textbf{Données} & \textbf{Français} & \textbf{Alsacien} & \textbf{Corse} & \textbf{occitan} \\
+\textbf{Données} & \textbf{Français} & \textbf{Alsacien} & \textbf{Corse} & \textbf{Occitan} \\
 \hline
 Fichiers & 11 & 16 & 15 & 77 \\
 Tokens & 10\ 070 & 9\ 677 & 9\ 601 & 25\ 674 \\
@@ -104,12 +106,12 @@ Lemmes & 3\ 039 & \NA & \NA & \NA \\
 \end{table}
 
 Le tableau \ref{table_donnees_par_langues} permet d'affiner cette analyse en comparant la répartition des
-données par langue. On constate que l'occitan domine très largement avec {25 674} tokens répartis sur 77 fichiers,
-contre respectivement {9 677} et {9 601} tokens pour l'alsacien et le corse. Cette surreprésentation de
+données par langue. On constate que l'occitan domine très largement avec 25\,674 tokens répartis sur 77 fichiers,
+contre respectivement 9\,677 et 9\,601 tokens pour l'alsacien et le corse. Cette surreprésentation de
 l'occitan peut nous poser problème. Celle-ci pourrait conduire à un classifieur moins performant sur les
 paires alsaciennes ou corses, qui disposent de moins d'exemples d'entraînement.
 Le corse et l'alsacien sont très similaires statistiquement. Cette similarité nous indique que les deux
-langues seront couvertes de manière quasi-égalitaire. Enfin, le nombre de lemmes français ({3 039}) constitue
+langues seront couvertes de manière quasi-égalitaire. Enfin, le nombre de lemmes français (3\,039) constitue
 un indicateur indirect de la richesse lexicale des textes sources. En théorie, ce chiffre devrait être
 similaire quelle que soit la langue cible, les textes étant des traductions d'un même contenu.
 Cependant la lemmatisation des autres langues reste pour l'instant impossible à cause du manque de modèle Spacy
@@ -133,22 +135,26 @@ Lemmes & \NA & \NA & 1\ 868\ 027 & \NA \\
 \label{table_donnees_comp}
 \end{table}
 
-Le tableau \ref{table_donnees_comp} représente les données du corpus comparable que nous utiliseront pour la
+Le tableau \ref{table_donnees_comp} représente les données du corpus comparable que nous utiliserons pour la
 phase de validation du modèle que nous allons créer.
 Celles-ci ont été obtenues via Wikipédia et les liens interlangues.
 Le programme va rechercher les articles en français ayant un lien interlangue avec l'alsacien et/ou le corse et/ou l'occitan.
-Dans le cas de l'alsacien, le programme cherche que les articles en alsacien et non dans les autres langues allémaniques en s'aidant
+Dans le cas de l'alsacien, le programme cherche uniquement les articles en alsacien et non dans les autres langues allémaniques en s'aidant
 des liens Wikipédia, ceux en alsacien provenant de l'adresse \href{https://als.wikipedia.org/}{https://als.wikipedia.org/}.
-Pour ce faire, nous avons utilisé le programme\footnote{\href{https://gitlab.com/memoire5005040/fragments_paralleles}{Le programme "fragment\_paralleles" de P. Tsolakis}} de \citet{tsolakis_2024}
+Pour ce faire, nous avons utilisé le programme\footnote{\href{https://gitlab.com/memoire5005040/fragments_paralleles}{Le programme "fragment\_paralleles" de P. Tsolakis}} de \citet{tsolakis_2024}.
 Le programme original a pour but de récupérer
 les articles en corse, luxembourgeois et occitan ainsi qu'en français, anglais, allemand, italien et espagnol.
 Ensuite le programme sélectionne 10 phrases provenant de 15 articles aléatoires pour chaque langue traitée
 de manière à trouver des paires de phrases candidates.
 Nous n'utilisons que la première partie du programme (modifiée pour les langues que nous étudions) car elle nous permet de retrouver
-tous les articles ayant un lien interlangue entre le français et les langues régionales{ :} alsacien, corse et occitan.
+tous les articles ayant un lien interlangue entre le français et les langues régionales~: alsacien, corse et occitan.
 
-Le français domine massivement avec plus de 6 millions de tokens répartis sur {2 760} fichiers, reflétant la
-richesse et la maturité de la communauté Wikipédia francophone. L'alsacien, avec {269 277} tokens sur {1 590}
+Le français domine massivement avec plus de 6 millions de tokens répartis sur 2\,760 fichiers, reflétant la
+richesse et la maturité de la communauté Wikipédia francophone. Cette domination du français vient du fait que certaines
+des pages ne sont pas traduites en alsacien mais sont présentes en corse et/ou occitan, le fichier français est donc ajouté
+au corpus, ainsi que ses traductions dans les langues régionales (hors alsacien). Ces fichiers étant présents, le français devient
+la langue majoritaire car l'on ne cherche pas que les articles où les 3 langues sont présentes en même temps.
+L'alsacien, avec 269\,277 tokens sur 1\,590
 fichiers, se démarque nettement des deux autres langues régionales et témoigne de la contribution
 de ses locuteurs, qui intègre notamment les dialectes mulhousien et strasbourgeois (voir en quelle proportion dans le tableau \ref{table_dialectes_gsw}).
 
@@ -171,12 +177,12 @@ Cette variété dialectale interne à l'alsacien constitue un atout pour évalue
 à des graphies divergentes, mais introduit également une complexité supplémentaire que les données
 d'entraînement parallèles, plus homogènes, ne couvrent qu'en moindre mesure.
 
-L'occitan, avec {311 734} tokens sur {1 590} fichiers, présente un volume intermédiaire cohérent avec sa présence
+L'occitan, avec 311\,734 tokens sur 1\,590 fichiers, présente un volume intermédiaire cohérent avec sa présence
 sur Wikipédia.
 Le corse, en revanche, apparaît très faiblement représenté avec seulement 352 tokens sur 5 fichiers,
 soit un volume environ 60 fois inférieur à celui de l'alsacien. Ce volume extrêmement bas
 d'articles doit être dû à un manque d'utilisateurs ajoutant des pages en corse sur Wikipédia. Cette disproportion est préoccupante pour
-la phase de validation{ :} le modèle disposera de très peu d'exemples pour être évalué, ce qui limitera la
+la phase de validation~: le modèle disposera de très peu d'exemples pour être évalué, ce qui limitera la
 portée des conclusions tirées sur les performances du classifieur pour cette langue.
 
 D'un point de vue qualitatif, les textes Wikipédia présentent une hétérogénéité thématique et stylistique
@@ -184,5 +190,5 @@ bien plus grande que les corpus parallèles. Cette diversité est à la fois un 
 Elle permet de tester la généralisation du modèle au-delà des genres textuels vus à l'entraînement, mais
 elle expose aussi le classifieur à des registres, des vocabulaires spécialisés et des structures discursives
 pour lesquels il n'a pas été préparé. Cette tension entre la richesse du corpus de validation et les
-limites du corpus d'entraînement constituent une contrainte importante dont il faudra tenir
+limites du corpus d'entraînement constitue une contrainte importante dont il faudra tenir
 compte dans l'interprétation des résultats.

@@ -2,7 +2,7 @@
 
 Les langues peu dotées sont au centre de la recherche menée dans ce mémoire. Ces langues (corse,
 occitan et alsacien) constituent des cas d’étude particulièrement pertinents, car elles combinent
-plusieurs caractéristiques{ :} faible disponibilité de ressources numériques, variations dialectales
+plusieurs caractéristiques~: faible disponibilité de ressources numériques, variations dialectales
 importantes, normalisation orthographique parfois incomplète et faible présence dans les grands
 jeux de données multilingues utilisés en TAL. Elles représentent ainsi un terrain d’expérimentation
 idéal pour les méthodes adaptées aux environnements peu dotés. Elles posent
@@ -15,12 +15,12 @@ Cependant de plus en plus de travaux de recherche universitaire de grande qualit
 pour les langues peu dotées. Ce qui pourrait être lié à une prise de conscience majeure et partagée dans le domaine du TAL
 sur l’importance de la représentation numérique pour toutes les langues \citep{bernhard_2018}.
 
-Les langues régionales étudiés dans ce mémoire ne présentent que peu de ressources numériques et sont par définition sous-dotées. Les ressources numériques
+Les langues régionales étudiées dans ce mémoire ne présentent que peu de ressources numériques et sont par définition sous-dotées. Les ressources numériques
 existantes sont créées uniquement par les communautés utilisant encore ces langues. Or, celles-ci sont en déclin et de moins
 en moins de personnes décident d'apprendre et d'utiliser les langues régionales. Dans le cas de l'alsacien, par exemple, après la seconde
-guerre mondiale, en 1946, 90,8 \% de la population d'Alsace se déclarait dialectophone. De nos jours, ce nombre est tombé
-(à compter de 2022) à 46 \% d'après l'\href{https://www.olcalsace.org/}{OLCA}\footnote{
-    Nombres de l'OLCA{ :} \href{https://www.olcalsace.org/fr/observer-et-veiller/le-dialecte-en-chiffres}{le dialecte en chiffres}}.
+guerre mondiale, en 1946, 90,8~\% de la population d'Alsace se déclarait dialectophone. De nos jours, ce nombre est tombé
+(à compter de 2022) à 46~\% d'après l'\href{https://www.olcalsace.org/}{OLCA}\footnote{
+    Nombres de l'OLCA~: \href{https://www.olcalsace.org/fr/observer-et-veiller/le-dialecte-en-chiffres}{le dialecte en chiffres}}.
 Cette baisse peut être expliquée par une utilisation du français comme
 langue principale partout au sein du pays et par une perte des langues régionales au fil du temps au profit d'une langue
 française généralisée.
@@ -32,7 +32,7 @@ linguistiques numériques exploitables pour des tâches de TAL. Cette sous-dotat
 de corpus annotés, de lexiques structurés, de modèles pré-entraînés ou de normes orthographiques stabilisées.
 Elle ne recouvre pas nécessairement la notion de langue minoritaire. Certaines langues peuvent être
 majoritaires dans un pays mais restent sous-dotées \citep{gerken_2022}.
-Il est à noter que certaines langues, pourtant minoritaires ou menacées, ne seront pas sous-dotées. Le catalan par exemple
+Il est à noter que certaines langues, pourtant minoritaires ou menacées, ne seront pas sous-dotées. Le catalan, par exemple,
 rentre dans cette catégorie de langues minoritaires qui ne sont pourtant pas sous-dotées \citep{bernhard_2018}.
 
 Il est aussi important de remarquer qu'une langue peu dotée ou minoritaire peut être parlée par beaucoup,
@@ -45,7 +45,7 @@ possédant moins de données informatisées.
 
 \section{Problèmes} \label{problemes_peudot}
 
-Les langues peu dotées posent les problèmes suivants{ :}
+Les langues peu dotées posent les problèmes suivants~:
 \begin{enumerate}
 \item Absence partielle ou totale de documents écrits informatisés rendant l'élaboration de corpus parallèles
 complexe voire impossible.
@@ -56,16 +56,16 @@ soit à l’absence de ces normes pour les langues essentiellement orales \citep
 \item Une bonne performance est compliquée à atteindre sur des systèmes de traduction par réseau
 neuronal pour des langues peu dotées en raison de leur nature et l'absence de paires de phrases bilingues de
 bonne qualité en grande quantité. \citep{steingrimsson_2023}
-\item Manque d'intérêt de la part de la communauté scientifique pour différentes raisons{ :} {« }Manque de
+\item Manque d'intérêt de la part de la communauté scientifique pour différentes raisons~: «~Manque de
 financement, de ressources humaines, de technologie appropriée, de descriptions linguistiques complètes et
-précises, de reconnaissance académique{ »} \citep{bernhard_2018}
+précises, de reconnaissance académique~» \citep{bernhard_2018}
 \item Un pourcentage important de segments bruités ou mal formés (erreurs typographiques, mélanges de langues,
 traductions partielles, segments tronqués) peut être observé dans les ressources disponibles. Ces segments
 dégradent la qualité des modèles d’alignement et compliquent l’extraction automatique de correspondances fiables.
 dans le peu d'écrits disponibles. Ceci pourrait affecter la performance de logiciels d'alignement. \citep{steingrimsson_2023}
 \end{enumerate}
 
-Ces problèmes sont particuliers, car ils touchent la vaste majorité des langues qui sont considérées {« }peu dotées{ »}
+Ces problèmes sont particuliers, car ils touchent la vaste majorité des langues qui sont considérées comme «~peu dotées~»
 parmi toutes les langues existantes dans le monde de nos jours \citep{sharoff_2016}.
 Cela implique que les langues peu dotées, parlées par environ 3 milliards de personnes, sont peu voire pas étudiées.
 Ces problèmes commencent avec le temps à avoir diverses solutions intéressantes, passant souvent par la
@@ -76,7 +76,7 @@ recherche en traduction automatique ou en TAL.
     \includegraphics[width=0.65\textwidth]{joshi_et_al_labels.png}
     \\
     \smallskip
-    \small{Les cercles pleins colorés réprésentent le nombre de langues présentes dans un groupe.\\}
+    \small{La taille des cercles pleins colorés réprésentent le nombre de langues présentes dans un groupe.\\}
     \small{Les bulles, en pointillées, délimitent les 6 catégories.}
     \smallskip
     \caption{Nuage de points des labels établis par \citet{joshi_2020}.}
@@ -86,19 +86,19 @@ recherche en traduction automatique ou en TAL.
 D'après le graphique de la figure \ref{joshi_et_al_labels_fig}, on peut remarquer que la vaste majorité des langues existantes se partagent
 entre la catégorie 0 et 1. D'après \citet{joshi_2020} les langues rentrent dans ces
 6 catégories\footnote{"0 The Left-Behinds, 1 The Scraping-Bys, 2 The Hopefuls, 3 The Rising Stars, 4 The Underdogs, 5 The Winners" nom original
-des catégories, notre traduction apparaît dans l'énumération}{ :}
+des catégories, notre traduction apparaît dans l'énumération}~:
 \begin{enumerate}
     \setcounter{enumi}{-1}
-    \item Les abandonnées{ :} langues ne possédant quasiment aucune ressource, même non annotées, une absence de corpus brut empêche un
+    \item Les abandonnées~: langues ne possédant quasiment aucune ressource, même non annotées, une absence de corpus brut empêche un
     travail correct sur ses langues
-    \item Celles qui s'en sortent{ :} langues ne possédant que peu de ressources non annotées et quasiment aucune ressource annotée,
+    \item Celles qui s'en sortent~: langues ne possédant que peu de ressources non annotées et quasiment aucune ressource annotée,
     des travaux en TAL pour la conservation de ces langues existent
-    \item Les optimistes{ :} possèdent un petit set de données non annotées et annotées et des communautés plus grandes
-    \item Les étoiles montantes{ :} pas assez de données annotées mais une présence en ligne forte à travers les communautés de locuteurs
-    \item Les outsiders{ :} capables de s'en sortir avec des communautés TAL dédiées qui s'en occupent
-    \item Les vainqueurs{ :} présence en ligne dominante, possédant le plus de ressources
+    \item Les optimistes~: possèdent un petit set de données non annotées et annotées et des communautés plus grandes
+    \item Les étoiles montantes~: pas assez de données annotées mais une présence en ligne forte à travers les communautés de locuteurs
+    \item Les outsiders~: capables de s'en sortir avec des communautés TAL dédiées qui s'en occupent
+    \item Les vainqueurs~: présence en ligne dominante, possédant le plus de ressources
 \end{enumerate}
-Les langues régionales que nous étudions se situent dans des niveaux entre 0 et 1. 
+Les langues régionales que nous étudions se situent dans des niveaux entre 0 et 1.
 Le français, lui, se situe au niveau 5 \citep{stosic_2024}. Cette taxonomie, se basant sur le nombre de ressources langagières
 existantes, nous permet de déterminer qu'il est bien plus dur de trouver des ressources correctes permettant
 d'élaborer un corpus parallèle pour les langues régionales qu'un corpus comparable.
@@ -119,7 +119,7 @@ un corpus parallèle pour des langues peu dotées comme certaines langues régio
 
 \subsection{Ressources collaboratives}
 
-\citet{miletic_2018} propose par exemple la composition de larges corpus annotés pour le serbe en adaptant des ressources de
+\citet{miletic_2018} proposent par exemple la composition de larges corpus annotés pour le serbe en adaptant des ressources de
 langues proches, en utilisant des ressources lexicales collaboratives, comme Wiktionary, ou en pré-annotant
 le corpus automatiquement. Il est à noter qu'en 2018 d'autres outils pour le traitement du serbe existaient
 déjà, mais que la plupart n'étaient pas disponibles librement.
@@ -132,10 +132,10 @@ présentés aux participants avant d'entraîner des étiqueteurs et l'autre perm
 \subsection{Intelligence artificielle pour les langues peu dotées}
 
 Le comité \textit{ad hoc} sur l’intelligence artificielle (\gls{CAHAI}) du Conseil de l’Europe
-{« }a constaté que l'IA peut aider les locuteurs de langues minoritaires à participer
+«~a constaté que l'IA peut aider les locuteurs de langues minoritaires à participer
 plus activement à la vie publique, aux débats, aux délibérations ou aux décisions, mais aussi mieux
-faire connaître ces langues.{ »} \citep{gerken_2022} De plus, d'après \citet{gerken_2022}, le CAHAI aurait remarqué que
-cela permet de faire mieux connaître ces langues amenant, plus tard, à une meilleure représentation de
+faire connaître ces langues.~» \citep{gerken_2022} De plus, d'après \citet{gerken_2022}, le CAHAI aurait remarqué que
+cela permet de faire mieux connaître ces langues, amenant plus tard, à une meilleure représentation de
 ces langues en ligne. L'IA et les réseaux neuronaux étant en plein essor,
 il est intéressant de considérer cette possibilité dans le cas de la création de ressources pour des
 langues peu dotées.
@@ -152,9 +152,9 @@ ligne contribue à renforcer sa visibilité. C’est notamment le cas du catalan
 vingt langues majoritairement traduites sur Wikipédia \citep{gerken_2022}.
 
 On peut aussi remarquer que l'Union européenne essaye de rendre l'emploi des langues minoritaires ou
-régionales plus fréquentes dans des domaines importants d'après \citet{gerken_2022}{ :} l'administration,
+régionales plus fréquentes dans des domaines importants d'après \citet{gerken_2022}~: l'administration,
 l'éducation, la justice ou les médias. Cet effort est exacerbé par la charte européenne des langues
-régionales ou minoritaires {« }ratifiée par 25 États, et signée (mais non ratifiée) par neuf autres{ »}
+régionales ou minoritaires «~ratifiée par 25 États, et signée (mais non ratifiée) par neuf autres~»
 \citep{gerken_2022}. La France signe cette charte en 1999 mais ne l'a toujours pas ratifiée. Celle-ci n'étant
 pas ratifiée, la France n'a mis en place aucun engagement.
 

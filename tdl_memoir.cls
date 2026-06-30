@@ -147,6 +147,7 @@
 
 % Turn on the style
 \pagestyle{fancyplain}
+\usepackage{tocloft}
 % Clear the header and footer
 \renewcommand{\headrulewidth}{0pt}
 \renewcommand{\footrulewidth}{0pt}

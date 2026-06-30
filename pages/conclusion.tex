@@ -1,12 +1,12 @@
 \unnumberedchap{Conclusion}
 \noindent\rule{\textwidth}{0.4pt}
 
-Pour conclure, nous avons pu, a partir d'un état de l'art couvrant plusieurs méthodes d'alignement statistique,
+Pour conclure, nous avons pu, à partir d'un état de l'art couvrant plusieurs méthodes d'alignement statistique,
 ainsi que des architectures de réseaux neuronaux et des approches de réutilisation de données imparfaites, élaborer une chaîne de 
 traitement adaptée aux contraintes des langues régionales de France. Pour ce faire, il a tout d'abord fallu composer un corpus d'entraînement.
-Pour ce faire, nous avons utilisé 3 sources principales{ :} ParCoLab \citep{stosic_2024}, 
-l'Atlas LIMSI et la parabole de l'enfant prodigue. À partir de ce corpus nous avons pu constituer des sous-ensembles semi-parallèles et
-non parallèles artificiels. Ces sous-ensembles, associés à l'ensemble des paires parallèles, ont pu être associés aux variables suivantes{ :}
+Pour ce faire, nous avons utilisé 3 sources principales~: ParCoLab \citep{stosic_2024}, 
+l'Atlas LIMSI et la parabole de l'enfant prodigue. À partir de ce corpus, nous avons pu constituer des sous-ensembles semi-parallèles et
+non parallèles artificiels. Ces sous-ensembles, associés à l'ensemble des paires parallèles, ont pu être associés aux variables suivantes~:
 \begin{itemize}
     \item Score sémantique SBERT
     \item Indice de Jaccard sur les bi, tri et quadrigrammes de caractères
@@ -19,10 +19,10 @@ Le modèle se révèle particulièrement conservateur, ce qui est souhaitable da
 contexte où la qualité des paires prime sur leur quantité. Les paires retenues
 présentent des scores SBERT systématiquement supérieurs à la moyenne des comparaisons totales, validant l'efficacité du filtrage.
 Plusieurs limites ont néanmoins été identifiées. La structure même de l'alsacien, ainsi que son orthographe, rendent les bonnes performances
-complexe d'obtention sur cette langue. La classe semi-parallèle reste difficile à séparer des paires non parallèles dans le modèle
+complexe à obtenir sur cette langue. La classe semi-parallèle reste difficile à séparer des paires non parallèles dans le modèle
 multiclasse, avec un taux de classification correct de seulement 49,8 \%.
 Ces résultats ouvrent plusieurs pistes de continuation. L'enrichissement du corpus d'entraînement, notamment pour le corse, permettrait de
-renforcer la robustesse du modèle. L'intégration de méthodes d'alignement documentaire préalable telles que FaDA \citep{tsolakis_2024},
+renforcer la robustesse du modèle. L'intégration de méthodes d'alignement documentaire préalable telles que FaDA \citep{tsolakis_2024}
 réduirait l'espace de recherche
 et améliorerait la précision de l'extraction. Enfin, le remplacement de la régression logistique par un classifieur neuronal entraîné sur des
 représentations SBERT affinées constituerait une évolution naturelle, dans la continuité des travaux de \citet{tan_2022} sur les
