@@ -20,10 +20,13 @@ Dans ce dépôt Git sont retrouvables :
   notebooks permet la création du modèle binaire et multiclasse et de leur scaler. Le deuxième réutilise les modèles déjà compilés au format .joblib pour relancer des
   évaluations. Celui-ci était principalement utilisé lors du mémoire pour réutiliser les mêmes modèles sans avoir à les recompiler et sans changer leur fonctionnement interne.
   - Un notebook nommé validation_modele. Celui-ci réalise la validation des modèles sur un corpus comparable donné. Dans le cas de notre mémoire, ce corpus
-  était basé sur Wikipédia et réalisé via un autre programme basé sur les travaux de P.TSOLAKIS(2023) non présent sur ce dépôt.
+  était basé sur Wikipédia et réalisé via un autre programme basé sur les travaux de P.TSOLAKIS (2024) non présent sur ce dépôt.
 - Les modèles au format "joblib" et les CSV des paires provenant du corpus comparable Wikipédia.
 
 ## Auteur et licence
 
 Auteur : Thibault DUMORTIER
 Licence : GNU GPLv3
+
+## Bibliographie
+TSOLAKIS, P. (2024). m2-technologies-des-langues / fragments_paralleles · GitLab [GitLab]. Récupéré le 27 décembre 2024 à https://gitlab.com/memoire5005040/fragments_paralleles
