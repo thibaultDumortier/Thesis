@@ -26,6 +26,7 @@ Dans ce dépôt Git sont retrouvables :
 ## Auteur et licence
 
 Auteur : Thibault DUMORTIER
+
 Licence : GNU GPLv3
 
 ## Bibliographie
