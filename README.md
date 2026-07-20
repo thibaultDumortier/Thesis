@@ -23,7 +23,7 @@ Dans ce dépôt Git sont retrouvables :
   était basé sur Wikipédia et réalisé via un autre programme basé sur les travaux de P.TSOLAKIS(2023) non présent sur ce dépôt.
 - Les modèles au format "joblib" et les CSV des paires provenant du corpus comparable Wikipédia.
 
-## Auteur et license
+## Auteur et licence
 
 Auteur : Thibault DUMORTIER
-License : GNU GPLv3
+Licence : GNU GPLv3
